@@ -32,10 +32,13 @@ public class MapUtils {
         for (Map.Entry<String, String> entry : flattenMap.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-            if (key.contains(prefix)) {
+            if (key.indexOf(prefix) == 0) {
                 String remainKey = key.replace(prefix, "");
                 if (!remainKey.equalsIgnoreCase(".length")) {
-                    obj = resolve(obj, remainKey, value);
+                    // For special cases : `Foo.List[0]` and `Foo.ListMap`
+                    if (remainKey.indexOf("[") == 0 || remainKey.indexOf(".") == 0) {
+                        obj = resolve(obj, remainKey, value);
+                    }
                 }
             }
         }
